@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebAPISampleHandsOn.DataLayer;
 using WebAPISampleHandsOn.SeedData;
+using WebAPISampleHandsOn.Services;
+using WebAPISampleHandsOn.Services.Repository;
 
 namespace WebAPISampleHandsOn
 {
@@ -28,11 +30,16 @@ namespace WebAPISampleHandsOn
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddDbContext<ApplicationDbContext>(option => option.UseInMemoryDatabase("Application"));
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("MyTastDatabase")));
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("MyTastDatabase")));
+
+            services.AddScoped<ApplicationDbContext>();
+            services.AddScoped(typeof(IBookServices),typeof (BookServices));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddControllers();
 
         }
 
@@ -53,7 +60,7 @@ namespace WebAPISampleHandsOn
                 endpoints.MapControllers();
             });
 
-            AddMovies.Initialize(app.ApplicationServices);
+            //AddMovies.Initialize(app.ApplicationServices);
         }
     }
 }
