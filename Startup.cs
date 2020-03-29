@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using WebAPISampleHandsOn.DataLayer;
-using WebAPISampleHandsOn.SeedData;
-using WebAPISampleHandsOn.Services;
-using WebAPISampleHandsOn.Services.Repository;
+using WebAPISampleHandsOn.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebAPISampleHandsOn
 {
@@ -30,15 +24,22 @@ namespace WebAPISampleHandsOn
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddDbContext<ApplicationDbContext>(option => option.UseInMemoryDatabase("Application"));
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddDbContext<AuthenticationContext>(opt => 
+            opt.UseSqlServer(Configuration.GetConnectionString("IdentityDatabase")));
+            services.AddDefaultIdentity<ApplicationUser>()
+                .AddEntityFrameworkStores<AuthenticationContext>();
+
+           // services.AddDbContext<ApplicationDbContext>(option => option.UseInMemoryDatabase("Application"));
 
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("MyTastDatabase")));
 
-            services.AddScoped<ApplicationDbContext>();
-            services.AddScoped(typeof(IBookServices),typeof (BookServices));
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            //services.AddScoped<ApplicationDbContext>();
+            //services.AddScoped(typeof(IBookServices),typeof (BookServices));
+            //services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddControllers();
 
         }
@@ -50,7 +51,7 @@ namespace WebAPISampleHandsOn
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseAuthentication();
             app.UseRouting();
 
             app.UseAuthorization();

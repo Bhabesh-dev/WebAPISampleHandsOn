@@ -21,6 +21,6 @@ import { MatTreeModule } from "@angular/material/tree";
   ],
   providers: [],
   bootstrap: [],
-  exports: [HeaderComponent, NavigationComponent]
+  exports: [HeaderComponent, NavigationComponent, FooterComponent]
 })
 export class SharedModule {}

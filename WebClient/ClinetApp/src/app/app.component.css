@@ -2,3 +2,23 @@ body {
   margin: 0;
   padding: 0%;
 }
+
+.appcontainer {
+  height: fit-content;
+  width: 300px;
+}
+.appmaincontent {
+  width: 50pc;
+  height: 10pc;
+  float: right;
+}
+.navigation {
+  width: 20pc;
+  height: fit-content;
+  margin: 0;
+  float: left;
+}
+.footer {
+  clear: both;
+  text-align: center;
+}
